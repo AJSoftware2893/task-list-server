@@ -1,16 +1,15 @@
+const { handlErrorPost, handlErrorPut } = require("./Middlewares/middlewares");
 const { Router } = require("express");
-const task = require("./tareas")
+const task = require("./tareas");
 const ListEditRouter = Router()
 
-ListEditRouter.post('/crear-tarea', (req, res) => {
-
+ListEditRouter.post('/crear-tarea', handlErrorPost, (req, res) => {
     task.push(req.body)
     res.status(200).json(task)
 })
 
 ListEditRouter.delete('/borrar-tarea/:id', (req, res) => {
     const { id } = req.params
-    console.log("🚀 ~ file: list-edit-route.js:13 ~ ListEditRouter.delete ~ id:", id)
     const existingTaskIndex = task.findIndex((t) => t.id = id);
     if (existingTaskIndex === -1) {
         res.status(404).json({ error: 'Tarea no encontrada' });
@@ -22,7 +21,7 @@ ListEditRouter.delete('/borrar-tarea/:id', (req, res) => {
     res.status(200).json({ task })
 })
 
-ListEditRouter.put('/actualizar-tarea/:id', (req, res) => {
+ListEditRouter.put('/actualizar-tarea/:id', handlErrorPut, (req, res) => {
     const { id } = req.params
     const tareaActualizada = req.body;
     const existingTaskIndex = task.findIndex((t) => t.id = id);
